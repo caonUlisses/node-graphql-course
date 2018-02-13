@@ -1,40 +1,25 @@
-const authors = [
-  {
-    id: 2,
-    name: 'Jesus',
-    age: 33,
-    books: [
-      'Bible',
-      'Devil'
-    ]
-  },
-  {
-    id: 666,
-    name: 'Satan',
-    age: 666,
-    books: [
-      'Dark Bible',
-      'Everything Else'
-    ]
-  },
-  {
-    id: 9,
-    name: 'Goethe',
-    age: 80,
-    books: [
-      'Werter',
-      'Faust'
-    ]
-  }
-]
+// import mongoose from 'mongoose'
+import Author from './models/author'
 
 const resolvers = {
   Query: {
     authors: () => {
-      return authors
+      return Author.find({})
     },
-    author: (root, { id }) => {
-      return authors.find(author => author.id === id)
+    author: (root, { _id }) => {
+      return Author.findOne({_id})
+    }
+  },
+  Mutation: {
+    addAuthor: (root, { name, age, books }) => {
+      const author = new Author({age, name, books}).save()
+      return author
+    },
+    deleteAuthor: (root, { _id }) => {
+      return Author.remove({_id})
+    },
+    updateAuthor: (root, { _id, name }) => {
+      return Author.findOneAndUpdate({_id}, {name})
     }
   }
 }
